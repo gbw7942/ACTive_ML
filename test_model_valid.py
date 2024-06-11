@@ -1,4 +1,7 @@
 import torch
+from torchvision import transforms
+from PIL import Image
+import random
 
 def check_pkl_validity(file_path):
     try:
@@ -12,5 +15,55 @@ def check_pkl_validity(file_path):
         return False
 
 # Example usage
-file_path = 'resnet_torch_model.pkl'
-is_valid = check_pkl_validity(file_path)
+# file_path = 'resnet_torch_model.pkl'
+# is_valid = check_pkl_validity(file_path)
+
+def check_pkl_accuracy(model_path,img_name):
+    # Load the model using torch.load
+    model = torch.load(model_path)
+    
+    # Define the image transformations
+    transform = transforms.Compose([
+        transforms.Resize((224, 224)),
+        transforms.ToTensor(),
+        transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
+    ])
+    
+    # Set the model to evaluation mode
+    model.eval()
+    img=Image.open(img_name)
+    img = transform(img)
+    img = img.unsqueeze(0)
+            
+    # Forward pass through the model
+    with torch.no_grad():
+        output = model(img)
+            
+    # Get the predicted class (0 or 1) by finding the index of the max logit value
+    _, predicted_class = torch.max(output, 1)
+    
+    return predicted_class.item()
+
+def eval_attention_set():
+    correct=0
+    random_integers = [random.randint(0, 100) for _ in range(80)]
+    for i in range(80):
+        image_num=random_integers[i]+1
+        result=check_pkl_accuracy("resnet_torch_model.pkl",f"./train/focus_{image_num}.jpg")
+        if result==1:
+            correct+=1
+    print(f"Test 80 images, correct number:{correct}, correct rate:{correct/80}")
+
+def eval_phone_set():
+    correct=0
+    random_integers = [random.randint(0, 100) for _ in range(80)]
+    for i in range(80):
+        image_num=random_integers[i]+1
+        result=check_pkl_accuracy("resnet_torch_model.pkl",f"./train/nofocus_{image_num}.jpg")
+        if result==0:
+            correct+=1
+    print(f"Test 80 images, correct number:{correct}, correct rate:{correct/80}")
+
+
+eval_attention_set()
+eval_phone_set()
