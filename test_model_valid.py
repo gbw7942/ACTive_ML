@@ -46,31 +46,35 @@ def check_pkl_accuracy(model_path,img_name):
 
 def eval_attention_set():
     correct=0
-    random_integers = [random.randint(0, 100) for _ in range(80)]
-    for i in range(80):
+    random_integers = [random.randint(0, 760) for _ in range(200)]
+    for i in range(200):
         image_num=random_integers[i]+1
         result=check_pkl_accuracy("resnet_torch_model.pkl",f"./train/attention_{image_num}.jpg")
         if result==1:
             correct+=1
-    print(f"Test 80 images, correct number:{correct}, correct rate:{correct/80}")
+        else:
+            print(image_num) 
+    print(f"Test 200 images, correct number:{correct}, correct rate:{correct/200}")
 
 def eval_phone_set():
     correct=0
-    random_integers = [random.randint(0, 100) for _ in range(80)]
-    for i in range(80):
+    random_integers = [random.randint(0, 760) for _ in range(300)]
+    for i in range(300):
         image_num=random_integers[i]+1
         result=check_pkl_accuracy("resnet_torch_model.pkl",f"./train/phone_{image_num}.jpg")
         if result==0:
             correct+=1
-    print(f"Test 80 images, correct number:{correct}, correct rate:{correct/80}")
+        else:
+            print(image_num)
+    print(f"Test 200 images, correct number:{correct}, correct rate:{correct/300}")
 
 
 eval_attention_set()
 eval_phone_set()
 
-# for i in range(24):
-#     result=check_pkl_accuracy("resnet_torch_model.pkl",f"{i+1}.jpg")
-#     if result==1:
-#         print("accurate")
-#     else:
-#         print("no")
+for i in range(24):
+    result=check_pkl_accuracy("resnet_torch_model.pkl",f"{i+1}.jpg")
+    if result==0:
+        print("accurate")
+    else:
+        print("no") 

@@ -3,7 +3,7 @@ from torchvision import transforms
 from PIL import Image
 import cv2
 import time
-from flask import Flask, request, jsonify
+from flask import Flask, jsonify
 
 app = Flask(__name__)
 
@@ -63,4 +63,5 @@ def get_integer():
     return jsonify(data)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host="10.0.0.66",port=5000)
+
