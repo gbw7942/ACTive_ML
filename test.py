@@ -3,9 +3,11 @@ from torchvision import transforms
 from PIL import Image
 import cv2
 import time
+from flask import Flask, request, jsonify
 
+app = Flask(__name__)
 
-def capture_frame(): #获取图片
+def get_result(): #获取图片
     print("Getiing image")
     video_url = "https://iusopen.ezvizlife.com/v3/openlive/L37100666_1_1.m3u8?expire=1778165089&id=711710851078774784&c=82f56de598&t=2096574bdff8f10b8b8e944315f6b97f935e8887c6bddbd73ecdcf46aac1e09d&ev=100"
     # Open the video stream
@@ -13,7 +15,8 @@ def capture_frame(): #获取图片
     if cap.isOpened():
         ret,frame = cap.read() # frame - 预处理的图片
         if not ret:
-            print("cannot read the frame") 
+            print("cannot read the frame")
+            return -1
         else:
             print("retireved image success")    
             frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB) # 将BGR格式转换为RGB格式
@@ -21,11 +24,10 @@ def capture_frame(): #获取图片
             # [optional] TODO - 定义一个时间frame去抽帧
             result=test_imgs(model_path='resnet_torch_model.pkl', img=image) # query model (test)
             print(result)
+            return result
     else:
         print("camera not opened")
-
-
-# threading.Timer(0.5, capture_frame).start()
+        return -2
 
 def test_imgs(model_path,img):
     print("Loading model")
@@ -54,10 +56,11 @@ def test_imgs(model_path,img):
     
     return predicted_class.item()
 
-def main():
-    print("start")
-    capture_frame()
-    time.sleep(0.5)
-    main()
+@app.route('/get_integer', methods=['GET'])
+def get_integer():
+    result = get_result()
+    data = {"value": result}
+    return jsonify(data)
 
-main()
+if __name__ == '__main__':
+    app.run(debug=True)
