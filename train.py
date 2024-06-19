@@ -8,6 +8,7 @@ from torch import nn, optim
 import matplotlib.pyplot as plt
 import torch
 import tarfile
+from vit import *
 
 class CustomImageDataset(Dataset):
     def __init__(self, directory, transform=None):
@@ -52,10 +53,10 @@ def init():
 transform = transforms.Compose([
     transforms.Resize((224, 224)),  # Resizing images to match model input
     transforms.ToTensor(),
-    transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
+    # transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
     transforms.RandomPerspective(distortion_scale=0.2,p=0.5),
-    transforms.ColorJitter(brightness=.2,hue=.3),
-    transforms.RandomHorizontalFlip(p=0.5),
+    # transforms.ColorJitter(brightness=.2,hue=.3),
+    # transforms.RandomHorizontalFlip(p=0.5),
     transforms.RandomRotation(degrees=(0,15))
     #Add more tran
 ])
@@ -67,10 +68,10 @@ print(len(train_dataset))
 trainloader = DataLoader(train_dataset, batch_size=2, shuffle=True)
 
 def train():
-    EPOCH_NUM = 20
+    EPOCH_NUM = 6
     LEARN_R = 0.0001  # or lr=0.001
-    model = resnet18(weights=None)
-    model.fc = nn.Linear(model.fc.in_features, 2)  # 2 classes: focus or not
+    model = resnet18(weights=None) # ViT() # resnet18(weights=None)
+    # model.fc = nn.Linear(model.fc.in_features, 2)  # 2 classes: focus or not
     # Loss and optimizer
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.SGD(model.parameters(), lr=LEARN_R, momentum=0.9)
