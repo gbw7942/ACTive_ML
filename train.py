@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 import torch
 import tarfile
 from vit import *
+import resnet
 
 class CustomImageDataset(Dataset):
     def __init__(self, directory, transform=None):
@@ -70,7 +71,7 @@ trainloader = DataLoader(train_dataset, batch_size=2, shuffle=True)
 def train():
     EPOCH_NUM = 6
     LEARN_R = 0.0001  # or lr=0.001
-    model = resnet18(weights=None) # ViT() # resnet18(weights=None)
+    model = resnet18(weights=None) # resnet.resnet18() # ViT()
     # model.fc = nn.Linear(model.fc.in_features, 2)  # 2 classes: focus or not
     # Loss and optimizer
     criterion = nn.CrossEntropyLoss()
