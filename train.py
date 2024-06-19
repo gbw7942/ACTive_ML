@@ -57,7 +57,7 @@ transform = transforms.Compose([
     # transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
     transforms.RandomPerspective(distortion_scale=0.2,p=0.5),
     # transforms.ColorJitter(brightness=.2,hue=.3),
-    # transforms.RandomHorizontalFlip(p=0.5),
+    transforms.RandomHorizontalFlip(p=0.5),
     transforms.RandomRotation(degrees=(0,15))
     #Add more tran
 ])
