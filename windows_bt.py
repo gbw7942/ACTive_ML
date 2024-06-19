@@ -34,15 +34,16 @@ else:
 
 # Send commands
 commands = ["+AAAAAAAE", "+BBBBBBBBE", "+CCCCCCCE"]
-ser.write("+AAAAAAAE".encode()) # open
+# ser.write("+AAAAAAAE".encode()) # open
 while True:
     result = get_result()
     if result not in (0 or 1):
+        print("Error occurred")
         break
     elif result == 0:
-        ser.write("+BBBBBBBBE".encode())
+        ser.write("+AAAAAAAE".encode())
         print("Phone detected")
-ser.write("+CCCCCCCE".encode()) # close
+# ser.write("+CCCCCCCE".encode()) # close
 
 # Close the serial connection
 ser.close()
