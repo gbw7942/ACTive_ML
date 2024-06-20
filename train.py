@@ -59,20 +59,18 @@ transform = transforms.Compose([
     # transforms.ColorJitter(brightness=.2,hue=.3),
     transforms.RandomHorizontalFlip(p=0.5),
     transforms.RandomRotation(degrees=(0,15))
-    #Add more tran
 ])
 
 # Loading your custom dataset
-init()
+#init()
 train_dataset = CustomImageDataset(directory='./train', transform=transform)
 print(len(train_dataset))
 trainloader = DataLoader(train_dataset, batch_size=2, shuffle=True)
 
 def train():
-    EPOCH_NUM = 6
+    EPOCH_NUM = 10
     LEARN_R = 0.0001  # or lr=0.001
-    model = resnet18(weights=None) # resnet.resnet18() # ViT()
-    # model.fc = nn.Linear(model.fc.in_features, 2)  # 2 classes: focus or not
+    model = ViT() #resnet18(weights=None)#resnet.resnet18()resnet18(weights=None) 
     # Loss and optimizer
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.SGD(model.parameters(), lr=LEARN_R, momentum=0.9)
