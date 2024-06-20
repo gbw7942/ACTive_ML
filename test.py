@@ -22,7 +22,7 @@ def get_result(): #获取图片
             frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB) # 将BGR格式转换为RGB格式
             image = Image.fromarray(frame_rgb) # 将NumPy数组转换为PIL图像
             # [optional] TODO - 定义一个时间frame去抽帧
-            result=test_imgs(model_path='resnet_torch_model.pkl', img=image) # query model (test)
+            result=test_imgs(model_path='resnet_unofficial_model.pkl', img=image) # query model (test)
             print(result)
             return result
     else:
@@ -56,12 +56,17 @@ def test_imgs(model_path,img):
     
     return predicted_class.item()
 
-@app.route('/get_integer', methods=['GET'])
-def get_integer():
-    result = get_result()
-    data = {"value": result}
-    return jsonify(data)
+# @app.route('/get_integer', methods=['GET'])
+# def get_integer():
+#     result = get_result()
+#     data = {"value": result}
+#     return jsonify(data)
 
-if __name__ == '__main__':
-    app.run(host="10.0.0.66",port=5000)
+# if __name__ == '__main__':
+#     app.run(host="10.0.0.66",port=5000)
 
+def start():
+    get_result()
+    time.sleep(1)
+    start()
+start()

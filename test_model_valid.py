@@ -17,10 +17,6 @@ def check_pkl_validity(file_path):
         print(f"An error occurred: {e}")
         return False
 
-# Example usage
-# file_path = 'resnet_torch_model.pkl'
-# is_valid = check_pkl_validity(file_path)
-
 def check_pkl_accuracy(model_path,img_name):
     # Load the model using torch.load
     model = torch.load(model_path)
@@ -46,7 +42,7 @@ def check_pkl_accuracy(model_path,img_name):
     
     return predicted_class.item()
 
-def eval_set(attention,phone):
+def eval_set(model,attention,phone):
     # Make sure train folder is accessible through ./train
     correct_phone=0
     correct_attention=0
@@ -57,7 +53,7 @@ def eval_set(attention,phone):
     random_phone_img=[random.randint(0, 760) for _ in range(phone)]
     for i in range(attention):
         attention_img_num=random_attention_img[i]+1
-        attention_result=check_pkl_accuracy("resnet_torch_model.pkl",f"./train/attention_{attention_img_num}.jpg")
+        attention_result=check_pkl_accuracy(model,f"./train/attention_{attention_img_num}.jpg")
         if attention_result==1:
             correct_attention+=1
         else:
@@ -65,7 +61,7 @@ def eval_set(attention,phone):
             wrong_img.append(f"./train/attention_{attention_img_num}.jpg")
     for j in range(phone):
         phone_img_num=random_phone_img[j]+1
-        phone_result=check_pkl_accuracy("resnet_torch_model.pkl",f"./train/phone_{phone_img_num}.jpg")
+        phone_result=check_pkl_accuracy(model,f"./train/phone_{phone_img_num}.jpg")
         if phone_result==0:
             correct_phone+=1
         else:
@@ -105,4 +101,10 @@ def eval_set(attention,phone):
         plt.tight_layout()
         plt.show()
 
-eval_set(100,100)
+#eval_set("resnet_official_model.pkl",100,100)
+#eval_set("resnet_unofficial_model.pkl",100,100)
+
+for i in range(13):
+    result=check_pkl_accuracy("resnet_unofficial_model.pkl",f"eval_{i+1}.jpg")
+    if result==1:
+        print(i+1)
