@@ -37,8 +37,7 @@ def test_imgs(model_path,img):
     # Define the image transformations
     transform = transforms.Compose([
         transforms.Resize((224, 224)),
-        transforms.ToTensor(),
-        transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
+        transforms.ToTensor()
     ])
     
     # Set the model to evaluation mode
