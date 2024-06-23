@@ -11,6 +11,19 @@ import tarfile
 from vit import *
 import resnet
 
+class LeftTwoThirdsCrop(object):
+    def __call__(self, img):
+        # Get the dimensions of the image
+        width, height = img.size
+        
+        # Calculate the width of the left 2/3 part
+        new_width = int(width * 2 / 3)
+        
+        # Crop the image
+        img_cropped = img.crop((0, 0, new_width, height))
+        
+        return img_cropped
+    
 class CustomImageDataset(Dataset):
     def __init__(self, directory, transform=None):
         self.directory = directory
@@ -50,8 +63,8 @@ def init():
         tar.extractall()
         tar.close()
 
-# Data preprocessing
 transform = transforms.Compose([
+    LeftTwoThirdsCrop(),
     transforms.Resize((224, 224)),  # Resizing images to match model input
     transforms.ToTensor(),
     # transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
@@ -68,9 +81,9 @@ print(len(train_dataset))
 trainloader = DataLoader(train_dataset, batch_size=2, shuffle=True)
 
 def train():
-    EPOCH_NUM = 10
+    EPOCH_NUM = 15
     LEARN_R = 0.0001  # or lr=0.001
-    model = ViT() #resnet18(weights=None)#resnet.resnet18()resnet18(weights=None) 
+    model = resnet.resnet18()#resnet18(weights=None)#ViT() 
     # Loss and optimizer
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.SGD(model.parameters(), lr=LEARN_R, momentum=0.9)

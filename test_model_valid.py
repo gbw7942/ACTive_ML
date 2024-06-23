@@ -6,6 +6,19 @@ import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 import os
 
+class LeftTwoThirdsCrop(object):
+    def __call__(self, img):
+        # Get the dimensions of the image
+        width, height = img.size
+        
+        # Calculate the width of the left 2/3 part
+        new_width = int(width * 2 / 3)
+        
+        # Crop the image
+        img_cropped = img.crop((0, 0, new_width, height))
+        
+        return img_cropped
+    
 def check_pkl_validity(file_path):
     try:
         # Attempt to load the file
@@ -23,6 +36,7 @@ def check_pkl_accuracy(model_path,img_name):
     
     # Define the image transformations
     transform = transforms.Compose([
+        LeftTwoThirdsCrop(),
         transforms.Resize((224, 224)),
         transforms.ToTensor()
     ])
@@ -49,8 +63,8 @@ def eval_set(model,attention,phone):
     wrong_phone=[]
     wrong_img=[]
     wrong_attention=[]
-    random_attention_img=[random.randint(0, 101) for _ in range(attention)]
-    random_phone_img=[random.randint(0, 173) for _ in range(phone)]
+    random_attention_img=[random.randint(0, 40) for _ in range(attention)]
+    random_phone_img=[random.randint(0, 75) for _ in range(phone)]
     for i in range(attention):
         attention_img_num=random_attention_img[i]+1
         attention_result=check_pkl_accuracy(model,f"./eval/attention_{attention_img_num}.jpg")
@@ -101,6 +115,6 @@ def eval_set(model,attention,phone):
         plt.tight_layout()
         plt.show()
 
-eval_set("vit_epoch30_lr0.001_model.pkl",102,174)
+eval_set("resnet_new_official_model.pkl",40,75)
 #eval_set("resnet_unofficial_model.pkl",100,100)
 
